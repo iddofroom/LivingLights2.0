@@ -9,14 +9,15 @@
 #define LEDS_PER_STRIP 690
 #define MAX_BRIGHTNESS 255
 #define DEFAULT_BRIGHTNESS 50  // range is 0 (off) to 255 (max brightness)
-#define STATE_DEBOUNCE_TIME 2  
+#define STATE_DEBOUNCE_TIME 2
 #define ERRORLED1 23
 // #define ERRORLED2 23
 
 
 int curr_file_i = 0;
-enum State back_states[] = {BACK0, BACK1};
-const char *files_iter_rr[] = {"pachamama", "overthinker"}; // Make sure file list is not longer than state list
+enum State back_states[] = {BACK0, BACK1, BACK2, BACK3, BACK4, BACK5, BACK6, BACK7, BACK8, BACK9, BACK10, BACK11, BACK12, BACK13, BACK14};
+const char *files_iter_rr[] = {"pachamama", "overthinker", "pachamama", "overthinker", "pachamama", "overthinker", "pachamama", "overthinker", "pachamama", "overthinker",
+                                "pachamama", "overthinker", "pachamama", "overthinker", "pachamama"}; // Make sure file list is not longer than state list
 // Song trackin g
 enum State state, prevState = IDLE;
 unsigned long currSongTime = 0, songStartTime = 0, procTime = 0;
@@ -30,11 +31,11 @@ unsigned long stateDebounceDelay = STATE_DEBOUNCE_TIME;
  * of the file written to SD card).
  * It also needs to receive the leds buffer for OctoWS2811, should be initialized as follows
  */
-DMAMEM int display_memory[LEDS_PER_STRIP * 6]; 
+DMAMEM int display_memory[LEDS_PER_STRIP * 6];
 int drawing_memory[LEDS_PER_STRIP * 6];
 SdLedsPlayer sd_leds_player(LEDS_PER_STRIP, display_memory, drawing_memory);
 unsigned long frame_timestamp;
-uint8_t brightness = DEFAULT_BRIGHTNESS; 
+uint8_t brightness = DEFAULT_BRIGHTNESS;
 
 // Monitoring vars
 unsigned long lastMonitorTime = 0;
@@ -55,7 +56,7 @@ void setup() {
   Serial.println("SD card started.");
   sd_leds_player.setBrightness(brightness);
   Serial.print("Brightness set to: "); Serial.print(brightness); Serial.println(" out of 255.");
-  
+
   // Error LEDs setup
   pinMode(ERRORLED1, OUTPUT);
   // pinMode(ERRORLED2, OUTPUT);
@@ -69,7 +70,7 @@ void setup() {
 
 void loop() {
   // unsigned long tic = millis();
-  
+
   // Background LED file loading
   if(!sd_leds_player.is_file_playing()) {
     state = back_states[curr_file_i];
@@ -92,7 +93,7 @@ void loop() {
       state = IDLE;
       songStartTime = millis();
     }
-  } 
+  }
 
   // Current song frame tracking
   currSongTime = millis() - songStartTime;
@@ -106,6 +107,6 @@ void loop() {
   //   Serial.println(F("COW Leds Alive"));
   //   lastMonitorTime = millis();
   // }
-  
+
   // Serial.println(millis() - tic);
 }
